@@ -79,7 +79,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from saiForIncLoads \nwhere\nLastModifiedDate > '@{activity('saiWatermark').output.firstRow.TimeAndDate}' and\nLastModifiedDate <= '@{activity('saiTable').output.firstRow.LastModifiedDate}'\n",
+						"sqlReaderQuery": "select * from saiForIncLoads \nwhere\nLastModifiedDate > '@{activity('saiWatermark').output.firstRow.TimeAndDate}' and\nLastModifiedDate <= '@{activity('saiTable').output.firstRow.newdatetime }'\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
