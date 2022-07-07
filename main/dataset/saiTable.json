@@ -1,0 +1,38 @@
+{
+	"name": "saiTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "localSQL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Country",
+				"type": "varchar"
+			},
+			{
+				"name": "State",
+				"type": "varchar"
+			},
+			{
+				"name": "City",
+				"type": "varchar"
+			},
+			{
+				"name": "Population",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "LastModifiedDate",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "saiForIncLoads"
+		}
+	}
+}
