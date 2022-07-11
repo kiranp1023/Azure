@@ -1,0 +1,16 @@
+{
+	"name": "localSQL2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=ITSMESAI\\SAI_SQL04;initial catalog=SOURCE_DATABASE;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2NDExOTc2OS0zODI2LTQ1ZDktOWZhNy1kNTc5NzhjOGI2ZDgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "Sai-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
