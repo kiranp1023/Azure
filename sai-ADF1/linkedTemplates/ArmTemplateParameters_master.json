@@ -11,13 +11,7 @@
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
-		"AzureSqlDatabase1_connectionString": {
-			"value": ""
-		},
-		"SinkLinkedService_connectionString": {
-			"value": ""
-		},
-		"sourceLinkedService_connectionString": {
+		"AzureSqlserver_connectionString": {
 			"value": ""
 		},
 		"localSQL_connectionString": {

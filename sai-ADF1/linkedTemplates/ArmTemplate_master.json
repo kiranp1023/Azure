@@ -15,17 +15,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
 		},
-		"AzureSqlDatabase1_connectionString": {
+		"AzureSqlserver_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
-		},
-		"SinkLinkedService_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SinkLinkedService'"
-		},
-		"sourceLinkedService_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sourceLinkedService'"
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlserver'"
 		},
 		"localSQL_connectionString": {
 			"type": "secureString",
@@ -68,14 +60,8 @@
 					"AzureDataLakeStorage1_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
 					},
-					"AzureSqlDatabase1_connectionString": {
-						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
-					},
-					"SinkLinkedService_connectionString": {
-						"value": "[parameters('SinkLinkedService_connectionString')]"
-					},
-					"sourceLinkedService_connectionString": {
-						"value": "[parameters('sourceLinkedService_connectionString')]"
+					"AzureSqlserver_connectionString": {
+						"value": "[parameters('AzureSqlserver_connectionString')]"
 					},
 					"localSQL_connectionString": {
 						"value": "[parameters('localSQL_connectionString')]"
