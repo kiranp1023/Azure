@@ -64,7 +64,7 @@
 									"partitionOption": "None"
 								},
 								"dataset": {
-									"referenceName": "SourceDB",
+									"referenceName": "sourceDB2",
 									"type": "DatasetReference"
 								}
 							}
