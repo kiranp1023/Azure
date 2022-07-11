@@ -1,0 +1,12 @@
+{
+	"name": "sourceDB2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "localSQL2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
