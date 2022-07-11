@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlserver'"
 		},
+		"azureTable2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'azureTable2'"
+		},
+		"azuresqltable2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'azuresqltable2'"
+		},
 		"localSQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'localSQL'"
@@ -62,6 +70,12 @@
 					},
 					"AzureSqlserver_connectionString": {
 						"value": "[parameters('AzureSqlserver_connectionString')]"
+					},
+					"azureTable2_connectionString": {
+						"value": "[parameters('azureTable2_connectionString')]"
+					},
+					"azuresqltable2_connectionString": {
+						"value": "[parameters('azuresqltable2_connectionString')]"
 					},
 					"localSQL_connectionString": {
 						"value": "[parameters('localSQL_connectionString')]"

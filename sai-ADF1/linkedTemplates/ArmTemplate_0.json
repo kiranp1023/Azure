@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlserver'"
 		},
+		"azureTable2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'azureTable2'"
+		},
+		"azuresqltable2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'azuresqltable2'"
+		},
 		"localSQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'localSQL'"
@@ -76,6 +84,32 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/azureTable2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('azureTable2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azuresqltable2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('azuresqltable2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Sai-IR')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -86,12 +120,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sinkDB')]",
+			"name": "[concat(parameters('factoryName'), '/sink')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlserver",
+					"referenceName": "azureTable2",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
@@ -110,16 +144,16 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlserver')]"
+				"[concat(variables('factoryId'), '/linkedServices/azureTable2')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/watermarktable')]",
+			"name": "[concat(parameters('factoryName'), '/watermark')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlserver",
+					"referenceName": "azureTable2",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -142,7 +176,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlserver')]"
+				"[concat(variables('factoryId'), '/linkedServices/azureTable2')]"
 			]
 		},
 		{
@@ -183,7 +217,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/incload-2')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -195,10 +229,9 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@pipeline().parameters.tablelist",
+								"value": "@pipeline().parameters.tableList",
 								"type": "Expression"
 							},
-							"isSequential": false,
 							"activities": [
 								{
 									"name": "watermarktable",
@@ -216,21 +249,21 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "select * from watermarktable where tablename='@{item().TABLE_NAME}'",
+												"value": "select * from watermarktable where TableName = '@{item().TABLE_NAME}'",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
 											"partitionOption": "None"
 										},
 										"dataset": {
-											"referenceName": "watermarktable",
+											"referenceName": "watermark",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
 									}
 								},
 								{
-									"name": "sourceTable",
+									"name": "sourcetable",
 									"type": "Lookup",
 									"dependsOn": [],
 									"policy": {
@@ -245,7 +278,7 @@
 										"source": {
 											"type": "SqlServerSource",
 											"sqlReaderQuery": {
-												"value": "select MAX(@{item().WaterMark_Column}) as NewWatermarkvalue from @{item().TABLE_NAME}",
+												"value": "select max(@{item().WaterMark_Column}) as NewWatermarkvalue from @{item().TABLE_NAME}",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -269,7 +302,7 @@
 											]
 										},
 										{
-											"activity": "sourceTable",
+											"activity": "sourcetable",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -287,7 +320,7 @@
 										"source": {
 											"type": "SqlServerSource",
 											"sqlReaderQuery": {
-												"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('watermarktable').output.firstRow.WatermarlValue}' and @{item().WaterMark_Column} <='@{activity('sourceTable').output.firstRow.NewWatermarkvalue}'",
+												"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('watermarktable').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity('sourcetable').output.firstRow.NewWatermarkvalue}'",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -328,10 +361,13 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "sinkDB",
+											"referenceName": "sink",
 											"type": "DatasetReference",
 											"parameters": {
-												"sinktablename": "@{item().TABLE_NAME}"
+												"sinktablename": {
+													"value": "@{item().TABLE_NAME}",
+													"type": "Expression"
+												}
 											}
 										}
 									]
@@ -360,7 +396,7 @@
 										"storedProcedureParameters": {
 											"LastModifiedtime": {
 												"value": {
-													"value": "@{activity('sourceTable').output.firstRow.NewWatermarkvalue}",
+													"value": "@{activity('sourcetable').output.firstRow.NewWatermarkvalue}",
 													"type": "Expression"
 												},
 												"type": "DateTime"
@@ -375,7 +411,7 @@
 										}
 									},
 									"linkedServiceName": {
-										"referenceName": "AzureSqlserver",
+										"referenceName": "azureTable2",
 										"type": "LinkedServiceReference"
 									}
 								}
@@ -388,17 +424,17 @@
 					"cancelAfter": {}
 				},
 				"parameters": {
-					"tablelist": {
+					"tableList": {
 						"type": "array"
 					}
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/watermarktable')]",
+				"[concat(variables('factoryId'), '/datasets/watermark')]",
 				"[concat(variables('factoryId'), '/datasets/SourceDB')]",
-				"[concat(variables('factoryId'), '/datasets/sinkDB')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlserver')]"
+				"[concat(variables('factoryId'), '/datasets/sink')]",
+				"[concat(variables('factoryId'), '/linkedServices/azureTable2')]"
 			]
 		}
 	]
