@@ -1,0 +1,23 @@
+{
+	"name": "sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azureTable2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sinktablename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().sinktablename",
+				"type": "Expression"
+			}
+		}
+	}
+}
