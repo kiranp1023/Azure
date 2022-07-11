@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'localSQL'"
 		},
+		"localSQL2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'localSQL2'"
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://sai1023datalakegen2.dfs.core.windows.net/"
@@ -199,6 +203,25 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/localSQL2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('localSQL2_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "Sai-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Sai-IR')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDB')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -214,6 +237,24 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/localSQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourceDB2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "localSQL2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/localSQL2')]"
 			]
 		},
 		{
@@ -285,7 +326,7 @@
 											"partitionOption": "None"
 										},
 										"dataset": {
-											"referenceName": "SourceDB",
+											"referenceName": "sourceDB2",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
@@ -354,7 +395,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "SourceDB",
+											"referenceName": "sourceDB2",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
@@ -432,7 +473,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/watermark')]",
-				"[concat(variables('factoryId'), '/datasets/SourceDB')]",
+				"[concat(variables('factoryId'), '/datasets/sourceDB2')]",
 				"[concat(variables('factoryId'), '/datasets/sink')]",
 				"[concat(variables('factoryId'), '/linkedServices/azureTable2')]"
 			]

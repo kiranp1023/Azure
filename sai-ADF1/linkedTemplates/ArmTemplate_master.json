@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'localSQL'"
 		},
+		"localSQL2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'localSQL2'"
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://sai1023datalakegen2.dfs.core.windows.net/"
@@ -79,6 +83,9 @@
 					},
 					"localSQL_connectionString": {
 						"value": "[parameters('localSQL_connectionString')]"
+					},
+					"localSQL2_connectionString": {
+						"value": "[parameters('localSQL2_connectionString')]"
 					},
 					"AzureDataLakeStorage1_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"

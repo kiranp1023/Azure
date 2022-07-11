@@ -23,6 +23,9 @@
 		"localSQL_connectionString": {
 			"value": ""
 		},
+		"localSQL2_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://sai1023datalakegen2.dfs.core.windows.net/"
 		},
